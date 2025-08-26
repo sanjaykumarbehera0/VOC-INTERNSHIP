@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Resume Builder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-container {
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px auto;
+            height: 10px;
+            width: 90%;
+        }
+
+        .progress-bar {
+            height: 10px;
+            width: 0%;
+            background: #007BFF;
+            transition: width 0.3s;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-section,
+        .resume-preview {
+            flex: 1;
+            min-width: 320px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #007BFF;
+            transform: scale(1.02);
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .form-buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .resume-preview {
+            transition: all 0.5s ease-in-out;
+        }
+
+        .resume-preview h2,
+        .resume-preview h3 {
+            margin-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+
+        /* Print styles for PDF download */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            .resume-preview,
+            .resume-preview * {
+                visibility: visible;
+            }
+
+            .resume-preview {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="no-print">Interactive Resume Builder</h1>
+    <!-- Progress bar -->
+    <div class="progress-container no-print">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="container">
+        <!-- Form Section -->
+        <div class="form-section no-print">
+            <h2>Enter Your Details</h2>
+            <form id="resumeForm">
+                <label>Name:</label>
+                <input type="text" id="name" placeholder="Your Name">
+                <label>Email:</label>
+                <input type="email" id="email" placeholder="you@example.com">
+                <label>Phone:</label>
+                <input type="text" id="phone" placeholder="+91 9876543210">
+                <label>Profile Summary:</label>
+                <textarea id="summary" placeholder="Write a short summary..."></textarea>
+                <h3>Education</h3>
+                <div id="education"></div>
+                <button type="button" onclick="addEducation()">+ Add Education</button>
+                <h3>Skills</h3>
+                <div>
+                    <label><input type="checkbox" value="HTML" class="skill"> HTML</label>
+                    <label><input type="checkbox" value="CSS" class="skill"> CSS</label>
+                    <label><input type="checkbox" value="JavaScript" class="skill"> JavaScript</label>
+                    <label><input type="checkbox" value="Java" class="skill"> Java</label>
+                    <label><input type="checkbox" value="C++" class="skill"> C++</label>
+                </div>
+                <h3>Experience</h3>
+                <div id="experience"></div>
+                <button type="button" onclick="addExperience()">+ Add Experience</button>
+                <div class="form-buttons">
+                    <button type="reset" onclick="resetForm()">Clear Form</button>
+                    <button type="button" onclick="downloadPDF()">Download PDF</button>
+                </div>
+            </form>
+        </div>
+        <!-- Resume Preview -->
+        <div class="resume-preview" id="resumePreview">
+            <h2 id="pName">Your Name</h2>
+            <p id="pEmail">Email: example@mail.com</p>
+            <p id="pPhone">Phone: +91 1234567890</p>
+            <h3>Profile Summary</h3>
+            <p id="pSummary">Your summary will appear here...</p>
+            <h3>Education</h3>
+            <ul id="pEducation"></ul>
+            <h3>Skills</h3>
+            <ul id="pSkills"></ul>
+            <h3>Experience</h3>
+            <ul id="pExperience"></ul>
+        </div>
+    </div>
+    <script>
+        // Store original title for later restoration
+        let originalTitle = document.title;
+
+        // Input live updates
+        const nameInput = document.getElementById("name");
+        const emailInput = document.getElementById("email");
+        const phoneInput = document.getElementById("phone");
+        const summaryInput = document.getElementById("summary");
+        const skills = document.querySelectorAll(".skill");
+        const progressBar = document.getElementById("progressBar");
+
+        function updateProgress() {
+            const totalFields = 4; // name, email, phone, summary
+            let filled = 0;
+            if (nameInput.value.trim()) filled++;
+            if (emailInput.value.trim()) filled++;
+            if (phoneInput.value.trim()) filled++;
+            if (summaryInput.value.trim()) filled++;
+            const percent = (filled / totalFields) * 100;
+            progressBar.style.width = percent + "%";
+        }
+
+        nameInput.addEventListener("input", e => {
+            document.getElementById("pName").textContent = e.target.value || "Your Name";
+            updateProgress();
+        });
+
+        emailInput.addEventListener("input", e => {
+            document.getElementById("pEmail").textContent = "Email: " + (e.target.value || "example@mail.com");
+            updateProgress();
+        });
+
+        phoneInput.addEventListener("input", e => {
+            document.getElementById("pPhone").textContent = "Phone: " + (e.target.value || "+91 1234567890");
+            updateProgress();
+        });
+
+        summaryInput.addEventListener("input", e => {
+            document.getElementById("pSummary").textContent = e.target.value || "Your summary will appear here";
+            updateProgress();
+        });
+
+        // Skills
+        skills.forEach(skill => {
+            skill.addEventListener("change", () => {
+                const selected = Array.from(skills).filter(s => s.checked).map(s => s.value);
+                const skillsList = document.getElementById("pSkills");
+
+                skillsList.innerHTML = "";
+                if (selected.length > 0) {
+                    selected.forEach(skillValue => {
+                        const li = document.createElement("li");
+                        li.textContent = skillValue;
+                        skillsList.appendChild(li);
+                    });
+                } else {
+                    skillsList.innerHTML = "<li>No skills added</li>";
+                }
+            });
+        });
+
+        // Education
+        function addEducation() {
+            const div = document.createElement("div");
+            div.innerHTML = `<input type="text" placeholder="Degree, Institute, Year" oninput="updateEducation()">`;
+            document.getElementById("education").appendChild(div);
+        }
+
+        function updateEducation() {
+            const inputs = document.querySelectorAll("#education input");
+            const educationList = document.getElementById("pEducation");
+
+            educationList.innerHTML = "";
+            inputs.forEach(inp => {
+                if (inp.value.trim() !== "") {
+                    const li = document.createElement("li");
+                    li.textContent = inp.value;
+                    educationList.appendChild(li);
+                }
+            });
+        }
+
+        // Experience
+        function addExperience() {
+            const div = document.createElement("div");
+            div.innerHTML = `<input type="text" placeholder="Job Title, Company, Year" oninput="updateExperience()">`;
+            document.getElementById("experience").appendChild(div);
+        }
+
+        function updateExperience() {
+            const inputs = document.querySelectorAll("#experience input");
+            const experienceList = document.getElementById("pExperience");
+
+            experienceList.innerHTML = "";
+            inputs.forEach(inp => {
+                if (inp.value.trim() !== "") {
+                    const li = document.createElement("li");
+                    li.textContent = inp.value;
+                    experienceList.appendChild(li);
+                }
+            });
+        }
+
+        // Reset
+        function resetForm() {
+            document.getElementById("pName").textContent = "Your Name";
+            document.getElementById("pEmail").textContent = "Email: example@mail.com";
+            document.getElementById("pPhone").textContent = "Phone: +91 1234567890";
+            document.getElementById("pSummary").textContent = "Your summary will appear here";
+            document.getElementById("pEducation").innerHTML = "";
+            document.getElementById("pSkills").innerHTML = "";
+            document.getElementById("pExperience").innerHTML = "";
+            document.getElementById("education").innerHTML = "";
+            document.getElementById("experience").innerHTML = "";
+            skills.forEach(s => s.checked = false);
+            progressBar.style.width = "0%";
+        }
+
+        // Download PDF
+        function downloadPDF() {
+            const name = nameInput.value.trim();
+            document.title = name ? name + "_Resume" : "Resume";
+            window.print();
+            // Restore original title after printing
+            setTimeout(() => {
+                document.title = originalTitle;
+            }, 500);
+        }
+    </script>
+</body>
+
+</html>
