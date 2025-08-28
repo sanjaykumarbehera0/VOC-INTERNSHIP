@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Programs | VaultofCodes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #4361ee;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: #4361ee;
+            border-radius: 2px;
+        }
+
+        .internship-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .internship-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .internship-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            padding: 25px;
+            color: white;
+            text-align: center;
+        }
+
+        .web-dev .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .app-dev .card-header {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .python .card-header {
+            background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%);
+        }
+
+        .java .card-header {
+            background: linear-gradient(135deg, #4A00E0 0%, #8E2DE2 100%);
+        }
+
+        .card-header i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .card-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .details {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .details li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f1f1;
+            display: flex;
+            align-items: center;
+        }
+
+        .details li:last-child {
+            border-bottom: none;
+        }
+
+        .details i {
+            margin-right: 10px;
+            color: #4361ee;
+            width: 20px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            text-align: center;
+            background: #4361ee;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #3a56d4;
+        }
+
+        @media (max-width: 768px) {
+            .internship-container {
+                gap: 20px;
+            }
+
+            .internship-card {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">VaultofCodes</div>
+            <div class="tagline">Unlock Your Potential with Our Internship Programs</div>
+            <h1>Internship Programs</h1>
+        </header>
+
+        <div class="internship-container">
+            <!-- Web Development Card -->
+            <div class="internship-card web-dev">
+                <div class="card-header">
+                    <i class="fas fa-laptop-code"></i>
+                    <h2>Web Development Internship</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="details">
+                        <li><i class="fas fa-calendar-alt"></i> <strong>Duration:</strong> 1 month/2 months</li>
+                        <li><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> Virtual</li>
+                        <li><i class="fas fa-money-bill-wave"></i> <strong>Stipend:</strong> Performance-based</li>
+                        <li><i class="fas fa-play-circle"></i> <strong>Start date:</strong> 05/11/2023</li>
+                    </ul>
+                    <a href="#" class="btn">View Details</a>
+                </div>
+            </div>
+
+            <!-- App Development Card -->
+            <div class="internship-card app-dev">
+                <div class="card-header">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h2>App Development Internship</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="details">
+                        <li><i class="fas fa-calendar-alt"></i> <strong>Duration:</strong> 1 month/2 months</li>
+                        <li><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> Virtual</li>
+                        <li><i class="fas fa-money-bill-wave"></i> <strong>Stipend:</strong> Performance-based</li>
+                        <li><i class="fas fa-play-circle"></i> <strong>Start date:</strong> 05/11/2023</li>
+                    </ul>
+                    <a href="#" class="btn">View Details</a>
+                </div>
+            </div>
+
+            <!-- Python Programming Card -->
+            <div class="internship-card python">
+                <div class="card-header">
+                    <i class="fab fa-python"></i>
+                    <h2>Python Programming Internship</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="details">
+                        <li><i class="fas fa-calendar-alt"></i> <strong>Duration:</strong> 1 month/2 months</li>
+                        <li><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> Virtual</li>
+                        <li><i class="fas fa-money-bill-wave"></i> <strong>Stipend:</strong> Performance-based</li>
+                        <li><i class="fas fa-play-circle"></i> <strong>Start date:</strong> 05/11/2023</li>
+                    </ul>
+                    <a href="#" class="btn">View Details</a>
+                </div>
+            </div>
+
+            <!-- Java Programming Card -->
+            <div class="internship-card java">
+                <div class="card-header">
+                    <i class="fab fa-java"></i>
+                    <h2>Java Programming Internship</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="details">
+                        <li><i class="fas fa-calendar-alt"></i> <strong>Duration:</strong> 1 month/2 months</li>
+                        <li><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> Virtual</li>
+                        <li><i class="fas fa-money-bill-wave"></i> <strong>Stipend:</strong> Performance-based</li>
+                        <li><i class="fas fa-play-circle"></i> <strong>Start date:</strong> 05/11/2023</li>
+                    </ul>
+                    <a href="#" class="btn">View Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple hover effect for buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('mouseenter', function () {
+                this.style.transform = 'scale(1.02)';
+            });
+
+            button.addEventListener('mouseleave', function () {
+                this.style.transform = 'scale(1)';
+            });
+
+            // Add click event to buttons (for demonstration)
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                const programName = this.closest('.internship-card').querySelector('h2').textContent;
+                alert(`You clicked on the ${programName} details button!`);
+            });
+        });
+    </script>
+</body>
+
+</html>
