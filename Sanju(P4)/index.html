@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Manage Your Tasks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+            background: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 4rem 0;
+            background: var(--light);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.2rem;
+            color: var(--dark);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            background: var(--light);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* Demo App */
+        .demo-app {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .app-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .sidebar {
+            flex: 1;
+            min-width: 250px;
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .main-content {
+            flex: 3;
+            min-width: 300px;
+        }
+
+        .project-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .project-list li {
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .project-list li:hover {
+            background: var(--light-gray);
+        }
+
+        .project-list li.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .task-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .task-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: var(--light);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .task-item input[type="checkbox"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .task-text {
+            flex: 1;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: var(--gray);
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .task-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            nav ul {
+                gap: 15px;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .app-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-tasks"></i>
+                    <span>TaskFlow</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">About</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <button id="loginBtn" class="btn btn-outline">Login</button>
+                    <button id="signupBtn" class="btn btn-primary">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Streamline Your Workflow with TaskFlow</h1>
+            <p>Collaborative task management for teams and individuals. Stay organized, meet deadlines, and boost
+                productivity with our intuitive platform.</p>
+            <button id="getStartedBtn" class="btn btn-primary">Get Started</button>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-list-check"></i>
+                    </div>
+                    <h3>Task Management</h3>
+                    <p>Create, assign, and track tasks with ease. Set priorities, due dates, and status updates.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Team Collaboration</h3>
+                    <p>Work together seamlessly with real-time updates, comments, and file sharing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>Progress Tracking</h3>
+                    <p>Visualize your progress with charts and analytics to keep projects on track.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo App Section -->
+    <section class="demo-app">
+        <div class="container">
+            <h2 class="section-title">Try TaskFlow</h2>
+            <div class="app-container">
+                <div class="sidebar">
+                    <h3>Projects</h3>
+                    <ul id="projectList" class="project-list">
+                        <li class="active">Personal Tasks</li>
+                        <li>Work Project</li>
+                        <li>Team Collaboration</li>
+                        <li>Learning Goals</li>
+                    </ul>
+                    <button id="newProjectBtn" class="btn btn-primary" style="width: 100%; margin-top: 20px;">
+                        <i class="fas fa-plus"></i> New Project
+                    </button>
+                </div>
+                <div class="main-content">
+                    <h3>My Tasks</h3>
+                    <div class="task-form">
+                        <input type="text" id="taskInput" class="task-input" placeholder="Add a new task...">
+                        <button id="addTaskBtn" class="btn btn-primary">Add Task</button>
+                    </div>
+                    <ul id="taskList" class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox">
+                            <span class="task-text">Complete project proposal</span>
+                            <div class="task-actions">
+                                <button><i class="fas fa-edit"></i></button>
+                                <button><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" checked>
+                            <span class="task-text completed">Schedule team meeting</span>
+                            <div class="task-actions">
+                                <button><i class="fas fa-edit"></i></button>
+                                <button><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox">
+                            <span class="task-text">Review design mockups</span>
+                            <div class="task-actions">
+                                <button><i class="fas fa-edit"></i></button>
+                                <button><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox">
+                            <span class="task-text">Prepare presentation slides</span>
+                            <div class="task-actions">
+                                <button><i class="fas fa-edit"></i></button>
+                                <button><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TaskFlow</h3>
+                    <p>Streamline your workflow and boost productivity with our intuitive task management platform.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p>Email: info@taskflow.com</p>
+                    <p>Phone: +1 (555) 123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 TaskFlow. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Login</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password">
+                </div>
+                <button id="loginSubmit" class="btn btn-primary" style="width: 100%;">Login</button>
+                <p style="text-align: center; margin-top: 20px;">
+                    Don't have an account? <a href="#" id="switchToSignup">Sign up</a>
+                </p>
+            </div>
+            <div id="signupForm" style="display: none;">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create a password">
+                </div>
+                <button id="signupSubmit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+                <p style="text-align: center; margin-top: 20px;">
+                    Already have an account? <a href="#" id="switchToLogin">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Backend simulation using localStorage
+        const TaskFlowDB = {
+            // Initialize the database
+            init: function () {
+                if (!localStorage.getItem('taskflow_users')) {
+                    localStorage.setItem('taskflow_users', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('taskflow_projects')) {
+                    localStorage.setItem('taskflow_projects', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('taskflow_tasks')) {
+                    localStorage.setItem('taskflow_tasks', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('taskflow_current_user')) {
+                    localStorage.setItem('taskflow_current_user', JSON.stringify(null));
+                }
+            },
+
+            // User methods
+            getUsers: function () {
+                return JSON.parse(localStorage.getItem('taskflow_users') || '[]');
+            },
+
+            addUser: function (user) {
+                const users = this.getUsers();
+                users.push(user);
+                localStorage.setItem('taskflow_users', JSON.stringify(users));
+                return user;
+            },
+
+            findUserByEmail: function (email) {
+                const users = this.getUsers();
+                return users.find(user => user.email === email);
+            },
+
+            // Project methods
+            getProjects: function () {
+                return JSON.parse(localStorage.getItem('taskflow_projects') || '[]');
+            },
+
+            getProjectsByUser: function (userId) {
+                const projects = this.getProjects();
+                return projects.filter(project => project.userId === userId);
+            },
+
+            addProject: function (project) {
+                const projects = this.getProjects();
+                projects.push(project);
+                localStorage.setItem('taskflow_projects', JSON.stringify(projects));
+                return project;
+            },
+
+            // Task methods
+            getTasks: function () {
+                return JSON.parse(localStorage.getItem('taskflow_tasks') || '[]');
+            },
+
+            getTasksByUser: function (userId) {
+                const tasks = this.getTasks();
+                return tasks.filter(task => task.userId === userId);
+            },
+
+            getTasksByProject: function (projectId) {
+                const tasks = this.getTasks();
+                return tasks.filter(task => task.projectId === projectId);
+            },
+
+            addTask: function (task) {
+                const tasks = this.getTasks();
+                tasks.push(task);
+                localStorage.setItem('taskflow_tasks', JSON.stringify(tasks));
+                return task;
+            },
+
+            updateTask: function (taskId, updates) {
+                const tasks = this.getTasks();
+                const taskIndex = tasks.findIndex(task => task.id === taskId);
+                if (taskIndex !== -1) {
+                    tasks[taskIndex] = { ...tasks[taskIndex], ...updates };
+                    localStorage.setItem('taskflow_tasks', JSON.stringify(tasks));
+                    return tasks[taskIndex];
+                }
+                return null;
+            },
+
+            deleteTask: function (taskId) {
+                const tasks = this.getTasks();
+                const updatedTasks = tasks.filter(task => task.id !== taskId);
+                localStorage.setItem('taskflow_tasks', JSON.stringify(updatedTasks));
+                return true;
+            },
+
+            // Current user methods
+            getCurrentUser: function () {
+                return JSON.parse(localStorage.getItem('taskflow_current_user') || 'null');
+            },
+
+            setCurrentUser: function (user) {
+                localStorage.setItem('taskflow_current_user', JSON.stringify(user));
+            },
+
+            clearCurrentUser: function () {
+                localStorage.setItem('taskflow_current_user', JSON.stringify(null));
+            }
+        };
+
+        // UI Controller
+        const TaskFlowUI = {
+            // Initialize the UI
+            init: function () {
+                TaskFlowDB.init();
+                this.bindEvents();
+                this.checkAuthStatus();
+            },
+
+            // Bind event listeners
+            bindEvents: function () {
+                // Auth buttons
+                document.getElementById('loginBtn').addEventListener('click', () => this.showAuthModal('login'));
+                document.getElementById('signupBtn').addEventListener('click', () => this.showAuthModal('signup'));
+                document.getElementById('getStartedBtn').addEventListener('click', () => this.showAuthModal('signup'));
+
+                // Auth modal
+                document.querySelector('.close-modal').addEventListener('click', () => this.hideAuthModal());
+                document.getElementById('switchToSignup').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showAuthForm('signup');
+                });
+                document.getElementById('switchToLogin').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showAuthForm('login');
+                });
+                document.getElementById('loginSubmit').addEventListener('click', () => this.handleLogin());
+                document.getElementById('signupSubmit').addEventListener('click', () => this.handleSignup());
+
+                // Task and project buttons
+                document.getElementById('addTaskBtn').addEventListener('click', () => this.addTask());
+                document.getElementById('newProjectBtn').addEventListener('click', () => this.addProject());
+
+                // Close modal when clicking outside
+                document.getElementById('authModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'authModal') this.hideAuthModal();
+                });
+            },
+
+            // Check authentication status
+            checkAuthStatus: function () {
+                const currentUser = TaskFlowDB.getCurrentUser();
+                if (currentUser) {
+                    this.updateUIForLoggedInUser(currentUser);
+                } else {
+                    this.updateUIForLoggedOutUser();
+                }
+            },
+
+            // Show auth modal
+            showAuthModal: function (formType) {
+                document.getElementById('authModal').style.display = 'flex';
+                this.showAuthForm(formType);
+            },
+
+            // Hide auth modal
+            hideAuthModal: function () {
+                document.getElementById('authModal').style.display = 'none';
+            },
+
+            // Show either login or signup form
+            showAuthForm: function (formType) {
+                if (formType === 'login') {
+                    document.getElementById('loginForm').style.display = 'block';
+                    document.getElementById('signupForm').style.display = 'none';
+                    document.getElementById('modalTitle').textContent = 'Login';
+                } else {
+                    document.getElementById('loginForm').style.display = 'none';
+                    document.getElementById('signupForm').style.display = 'block';
+                    document.getElementById('modalTitle').textContent = 'Sign Up';
+                }
+            },
+
+            // Handle login
+            handleLogin: function () {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                if (!email || !password) {
+                    alert('Please enter both email and password');
+                    return;
+                }
+
+                const user = TaskFlowDB.findUserByEmail(email);
+                if (user && user.password === password) {
+                    TaskFlowDB.setCurrentUser(user);
+                    this.updateUIForLoggedInUser(user);
+                    this.hideAuthModal();
+                    alert('Login successful!');
+                } else {
+                    alert('Invalid email or password');
+                }
+            },
+
+            // Handle signup
+            handleSignup: function () {
+                const name = document.getElementById('signupName').value;
+                const email = document.getElementById('signupEmail').value;
+                const password = document.getElementById('signupPassword').value;
+
+                if (!name || !email || !password) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+
+                if (TaskFlowDB.findUserByEmail(email)) {
+                    alert('User with this email already exists');
+                    return;
+                }
+
+                const user = {
+                    id: Date.now().toString(),
+                    name,
+                    email,
+                    password
+                };
+
+                TaskFlowDB.addUser(user);
+                TaskFlowDB.setCurrentUser(user);
+                this.updateUIForLoggedInUser(user);
+                this.hideAuthModal();
+                alert('Account created successfully!');
+            },
+
+            // Update UI for logged in user
+            updateUIForLoggedInUser: function (user) {
+                document.getElementById('loginBtn').textContent = 'Logout';
+                document.getElementById('signupBtn').textContent = user.name;
+                document.getElementById('signupBtn').style.display = 'block';
+
+                // Load user's projects and tasks
+                this.loadProjects();
+            },
+
+            // Update UI for logged out user
+            updateUIForLoggedOutUser: function () {
+                document.getElementById('loginBtn').textContent = 'Login';
+                document.getElementById('signupBtn').textContent = 'Sign Up';
+                document.getElementById('signupBtn').style.display = 'block';
+
+                // Clear projects and tasks
+                document.getElementById('projectList').innerHTML = '';
+                document.getElementById('taskList').innerHTML = '';
+            },
+
+            // Add a new task
+            addTask: function () {
+                const currentUser = TaskFlowDB.getCurrentUser();
+                if (!currentUser) {
+                    this.showAuthModal('login');
+                    return;
+                }
+
+                const taskInput = document.getElementById('taskInput');
+                const taskText = taskInput.value.trim();
+
+                if (!taskText) {
+                    alert('Please enter a task');
+                    return;
+                }
+
+                const task = {
+                    id: Date.now().toString(),
+                    text: taskText,
+                    completed: false,
+                    userId: currentUser.id,
+                    projectId: 'default', // For simplicity, using a default project
+                    createdAt: new Date().toISOString()
+                };
+
+                TaskFlowDB.addTask(task);
+                this.renderTasks();
+                taskInput.value = '';
+            },
+
+            // Add a new project
+            addProject: function () {
+                const currentUser = TaskFlowDB.getCurrentUser();
+                if (!currentUser) {
+                    this.showAuthModal('login');
+                    return;
+                }
+
+                const projectName = prompt('Enter project name:');
+                if (!projectName) return;
+
+                const project = {
+                    id: Date.now().toString(),
+                    name: projectName,
+                    userId: currentUser.id,
+                    createdAt: new Date().toISOString()
+                };
+
+                TaskFlowDB.addProject(project);
+                this.loadProjects();
+            },
+
+            // Load projects for the current user
+            loadProjects: function () {
+                const currentUser = TaskFlowDB.getCurrentUser();
+                if (!currentUser) return;
+
+                const projects = TaskFlowDB.getProjectsByUser(currentUser.id);
+                const projectList = document.getElementById('projectList');
+                projectList.innerHTML = '';
+
+                projects.forEach(project => {
+                    const li = document.createElement('li');
+                    li.textContent = project.name;
+                    li.dataset.id = project.id;
+                    li.addEventListener('click', () => this.loadTasks(project.id));
+                    projectList.appendChild(li);
+                });
+
+                // Load tasks for the first project
+                if (projects.length > 0) {
+                    this.loadTasks(projects[0].id);
+                }
+            },
+
+            // Load tasks for a project
+            loadTasks: function (projectId) {
+                const tasks = TaskFlowDB.getTasksByProject(projectId);
+                this.renderTasks(tasks);
+            },
+
+            // Render tasks
+            renderTasks: function (tasks = null) {
+                if (!tasks) {
+                    const currentUser = TaskFlowDB.getCurrentUser();
+                    if (!currentUser) return;
+                    tasks = TaskFlowDB.getTasksByUser(currentUser.id);
+                }
+
+                const taskList = document.getElementById('taskList');
+                taskList.innerHTML = '';
+
+                tasks.forEach(task => {
+                    const li = document.createElement('li');
+                    li.className = 'task-item';
+                    li.innerHTML = `
+                        <input type="checkbox" ${task.completed ? 'checked' : ''}>
+                        <span class="task-text ${task.completed ? 'completed' : ''}">${task.text}</span>
+                        <div class="task-actions">
+                            <button><i class="fas fa-edit"></i></button>
+                            <button><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+
+                    // Add event listeners
+                    const checkbox = li.querySelector('input[type="checkbox"]');
+                    const taskText = li.querySelector('.task-text');
+                    const deleteBtn = li.querySelector('.fa-trash').closest('button');
+                    const editBtn = li.querySelector('.fa-edit').closest('button');
+
+                    checkbox.addEventListener('change', () => {
+                        TaskFlowDB.updateTask(task.id, { completed: checkbox.checked });
+                        taskText.classList.toggle('completed', checkbox.checked);
+                    });
+
+                    deleteBtn.addEventListener('click', () => {
+                        TaskFlowDB.deleteTask(task.id);
+                        li.remove();
+                    });
+
+                    editBtn.addEventListener('click', () => {
+                        const newText = prompt('Edit task:', task.text);
+                        if (newText !== null && newText.trim() !== '') {
+                            TaskFlowDB.updateTask(task.id, { text: newText });
+                            taskText.textContent = newText;
+                            if (task.completed) {
+                                taskText.classList.add('completed');
+                            }
+                        }
+                    });
+
+                    taskList.appendChild(li);
+                });
+            }
+        };
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function () {
+            TaskFlowUI.init();
+        });
+    </script>
+</body>
+
+</html>
